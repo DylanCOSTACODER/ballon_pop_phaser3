@@ -9,12 +9,12 @@ export default class MainScene extends Phaser.Scene {
     }
 
     init(data) {
-        // Pasing your last scene choice into this.choice for the actual scene
-        this.choice = data.choice;
-    }
-    /**
-     *   Load the game assets.
-     */
+            // Pasing your last scene choice into this.choice for the actual scene
+            this.choice = data.choice;
+        }
+        /**
+         *   Load the game assets.
+         */
     preload() {
         this.load.spritesheet('balloons', 'assets/ballon-sprite.png', {
             frameWidth: 128,
@@ -48,31 +48,39 @@ export default class MainScene extends Phaser.Scene {
     createBallon() {
         // Set a random gravity X
         var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -gravity : -gravity / 10);
+
+        // Instantiate balloon with equation of movement
         var balloon = balloons.create(
             Phaser.Math.Between(0 + 100, this.game.config.width - 100),
             this.game.config.height + 100,
-            'balloons'
+            'balloons',
+            0
         );
-        balloon.setScale(this.scaleBalloon).setScrollFactor(0);
-        balloon.setFrame(Phaser.Math.Between(0, 4));
+
+        // Initialize instance balloon
         balloon.allowGravity = true;
         balloon.setInteractive();
+
+        // Set gravity to balloon instance
         balloon.setGravityY(gravity);
         balloon.setGravityX(balloon.body.x > this.game.config.width / 2 ? -xGravity : xGravity);
-        balloon.body.immovable = true;
-        balloon.onInputDown.add(this.destroyBalloon, this);
-    }
 
-    destroyBalloon(balloon) {
-        balloon.destroy();
-        score = score + 1;
+        // Interaction click in balloon
+        balloon.once(
+            'pointerdown',
+            function() {
+                balloon.destroy();
+                score++;
+            },
+            this
+        );
     }
 
     /**
      *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
      */
     update() {
-        balloons.getChildren().forEach(function (balloon) {
+        balloons.getChildren().forEach(function(balloon) {
             if (balloon.body.y < 0) {
                 // Destroy balloons of range
                 balloon.destroy();

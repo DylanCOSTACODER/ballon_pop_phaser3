@@ -2,13 +2,9 @@ export default class StartScene extends Phaser.Scene {
     constructor() {
         super('StartScene');
     }
-    /**
-     *   Load the game assets.
-     */
-    preload() {}
 
     /**
-     *   Create the game objects (images, groups, sprites and animations).
+     * Create the game objects (images, groups, sprites and animations).
      */
     create() {
         // Init ballon chase button
@@ -26,14 +22,14 @@ export default class StartScene extends Phaser.Scene {
         colorChaseButton.setInteractive();
         colorChaseButton.x = this.game.config.width / 2 - colorChaseButton.width / 2;
         colorChaseButton.y = (this.game.config.height * 3) / 4 - colorChaseButton.height / 2;
+
+        // Manage mode choice
         ballonChaseButton.on('pointerdown', () => {
             this.goToMainScene('balloons');
         });
         colorChaseButton.on('pointerdown', () => {
             this.goToMainScene('colors');
         });
-        // Navigate to main scene passing data
-        //this.goToMainScene(yourChoice);
     }
 
     /**
