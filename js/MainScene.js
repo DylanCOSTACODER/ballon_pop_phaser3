@@ -1,7 +1,12 @@
 let balloons;
 let delay = 1000;
+let generalTime = 100000;
 let gravity = -50;
 let score = 0;
+let color = 1;
+/**
+ * Make enum of color in function of rgb
+ */
 
 export default class MainScene extends Phaser.Scene {
     constructor() {
@@ -9,12 +14,12 @@ export default class MainScene extends Phaser.Scene {
     }
 
     init(data) {
-            // Pasing your last scene choice into this.choice for the actual scene
-            this.choice = data.choice;
-        }
-        /**
-         *   Load the game assets.
-         */
+        // Pasing your last scene choice into this.choice for the actual scene
+        this.choice = data.choice;
+    }
+    /**
+     *   Load the game assets.
+     */
     preload() {
         this.load.spritesheet('balloons', 'assets/ballon-sprite.png', {
             frameWidth: 128,
@@ -40,6 +45,16 @@ export default class MainScene extends Phaser.Scene {
             loop: true,
             paused: false,
         });
+        //Init general timer for end of scene
+        if (generalTime) {
+            this.generalTimer = this.time.addEvent({
+                delay: generalTime,
+                callback: this.goToStartScene,
+                callbackScope: this,
+                loop: false,
+                paused: false,
+            });
+        }
     }
 
     /**
@@ -48,8 +63,6 @@ export default class MainScene extends Phaser.Scene {
     createBallon() {
         // Set a random gravity X
         var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -gravity : -gravity / 10);
-
-        // Instantiate balloon with equation of movement
         var balloon = balloons.create(
             Phaser.Math.Between(0 + 100, this.game.config.width - 100),
             this.game.config.height + 100,
@@ -68,19 +81,62 @@ export default class MainScene extends Phaser.Scene {
         // Interaction click in balloon
         balloon.once(
             'pointerdown',
-            function() {
+            function () {
                 balloon.destroy();
                 score++;
             },
             this
         );
+
+        // Create balloon geometry
+        // var balloon = new Phaser.Geom.Circle(
+        //     Phaser.Math.Between(0 + 100, this.game.config.width - 100),
+        //     this.game.config.height + 100,
+        //     10
+        // );
+        // this.add.circle(200, 200, 80, 0x6666ff);
+        // graphics.fillCircleShape(balloon);
+
+        // var graphics = this.add.graphics({ fillStyle: { color: 0xff0000 } });
+        // var test = new Phaser.Geom.Circle(50, 50, 50);
+        // graphics.fillCircleShape(balloon);
+
+        // Instantiate balloon with equation of movement
+        // var balloon = balloons.create(, this.game.config.width - 100),
+        //       this.game.config.height + 100,
+        //     ' 'balloo's',
+        //       0
+        //   );
+        //
+        // Initialize instance balloon
+        // Initialize instance balloon
+        // var balloon = this.add.circle(200, 200, 80, 0x6666ff);
+        // balloon.allowgravity = true;
+        // balloon.setInteractive();
+
+        // balloon.setGravityY(gravity);
+        // balloon.setGravityX(balloon.body.x > this.game.config.width / 2 ? -xGravity : xGravity);
+
+        // // Interaction click in balloon
+        // balloon.once(
+        //     'pointerdown',
+        //     function () {
+        //         balloon.destroy();
+        //         score++;
+        //     },
+        //     this
+        // );
+    }
+
+    goToStartScene() {
+        this.scene.start('StartScene');
     }
 
     /**
      *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
      */
     update() {
-        balloons.getChildren().forEach(function(balloon) {
+        balloons.getChildren().forEach(function (balloon) {
             if (balloon.body.y < 0) {
                 // Destroy balloons of range
                 balloon.destroy();
