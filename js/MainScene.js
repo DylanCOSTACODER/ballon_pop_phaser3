@@ -1,7 +1,6 @@
 let balloons;
 let delay = 1000;
 let generalTime = 100000;
-let gravity = -50;
 let score;
 let color;
 let chrono;
