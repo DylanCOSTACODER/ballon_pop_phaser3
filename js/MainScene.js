@@ -4,6 +4,21 @@ let generalTime = 100000;
 let gravity = -50;
 let score = 0;
 let color = 1;
+
+/**
+ * Convert rgb string into value number
+ */
+const colors = {
+    'rgb(124,252,0)': { value: 0, name: 'Verts' },
+    'rgb(255,255,0)': { value: 1, name: 'Jaunes' },
+    'rgb(0,0,255)': { value: 2, name: 'Bleus' },
+    'rgb(255,165,0)': { value: 3, name: 'Oranges' },
+    'rgb(238,130,238)': { value: 4, name: 'Violets' },
+    'rgb(126,51,0)': { value: 5, name: 'Marrons' },
+    'rgb(0,0,0)': { value: 6, name: 'Noirs' },
+    'rgb(255,0,0)': { value: 7, name: 'Rouges' },
+    'rgb(230,230,250)': { value: 8, name: 'Lavandes' },
+};
 /**
  * Make enum of color in function of rgb
  */
@@ -22,8 +37,8 @@ export default class MainScene extends Phaser.Scene {
      */
     preload() {
         this.load.spritesheet('balloons', 'assets/ballon-sprite.png', {
-            frameWidth: 128,
-            frameHeight: 128,
+            frameWidth: 521,
+            frameHeight: 521,
         });
     }
 
@@ -34,7 +49,7 @@ export default class MainScene extends Phaser.Scene {
         // Init is horizontal boolean
         this.isHorizontal = this.game.config.width > this.game.config.height;
         // Init scale balloon width this will give a responsive ballon size
-        this.scaleBalloon = this.isHorizontal ? this.game.config.width * 0.0005 : this.game.config.width * 0.001;
+        this.scaleBalloon = this.isHorizontal ? this.game.config.width * 0.0001 : this.game.config.width * 0.001;
         balloons = this.physics.add.group();
 
         // Init timer for creating balloon
@@ -71,6 +86,7 @@ export default class MainScene extends Phaser.Scene {
         );
 
         // Initialize instance balloon
+        balloon.setScale(this.scaleBalloon);
         balloon.allowGravity = true;
         balloon.setInteractive();
 
