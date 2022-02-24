@@ -16,7 +16,7 @@ export default class StartScene extends Phaser.Scene {
         ballonChaseButton.y = this.game.config.height / 4 - ballonChaseButton.height / 2;
 
         // Init color chase button
-        let colorChaseButton = this.add.text(100, 100, 'Chasse aux coleurs');
+        let colorChaseButton = this.add.text(100, 100, 'Chasse aux couleurs');
         colorChaseButton.setPadding(10);
         colorChaseButton.setStyle({ backgroundColor: '#e55c90', fontSize: 32 });
         colorChaseButton.setInteractive();

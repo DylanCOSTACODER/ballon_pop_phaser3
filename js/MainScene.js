@@ -2,8 +2,9 @@ let balloons;
 let delay = 1000;
 let generalTime = 100000;
 let gravity = -50;
-let score = 0;
-let color = 1;
+let score;
+let color;
+let chrono;
 
 /**
  * Convert rgb string into value number
@@ -83,7 +84,8 @@ export default class MainScene extends Phaser.Scene {
         });
 
         // Instantiate color and display
-        this.colorText = this.add.text(400, 25, 'Color: 0', {
+        this.color = 1;
+        this.colorText = this.add.text(400, 25, 'Color:', {
             fontSize: '20px',
             fill: '#000',
         });
@@ -104,13 +106,23 @@ export default class MainScene extends Phaser.Scene {
      * Here go the code to create a balloon
      */
     createBallon() {
+        // Instantiate variables
+        let colorBalloon;
+
+        // Manage mode difference for instance balloon
+        if (this.choice == 'balloons') {
+            colorBalloon = this.color;
+        } else {
+            colorBalloon = Phaser.Math.Between(0, 8);
+        }
+
         // Set a random gravity X
         var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -gravity : -gravity / 10);
         var balloon = balloons.create(
             Phaser.Math.Between(0 + 100, this.game.config.width - 100),
             this.game.config.height + 100,
             'balloons',
-            0
+            colorBalloon
         );
 
         // Initialize instance balloon
