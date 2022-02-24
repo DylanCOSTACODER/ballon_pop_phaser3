@@ -5,6 +5,9 @@ let gravity = -50;
 let score;
 let color;
 let chrono;
+let vitesse = 50;
+let ballonSize = 1;
+let gravity = -vitesse;
 
 /**
  * Convert rgb string into value number
@@ -52,7 +55,9 @@ export default class MainScene extends Phaser.Scene {
         // Init is horizontal boolean
         this.isHorizontal = this.game.config.width > this.game.config.height;
         // Init scale balloon width this will give a responsive ballon size
-        this.scaleBalloon = this.isHorizontal ? this.game.config.width * 0.0001 : this.game.config.width * 0.001;
+        this.scaleBalloon = this.isHorizontal ?
+            this.game.config.width * 0.0001 * ballonSize :
+            this.game.config.width * 0.001 * ballonSize;
         balloons = this.physics.add.group();
 
         // Init timer for creating balloon
