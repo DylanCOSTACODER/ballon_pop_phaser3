@@ -4,9 +4,10 @@ let generalTime = 100000;
 let score;
 let color;
 let chrono;
-let vitesse = 50;
-let ballonSize = 1;
-let gravity = -vitesse;
+let speed = 5;
+let ballonSize = 2;
+let gravity = -speed * 10;
+let life;
 
 /**
  * Convert rgb string into value number
@@ -59,13 +60,21 @@ export default class MainScene extends Phaser.Scene {
             this.game.config.width * 0.001 * ballonSize;
         balloons = this.physics.add.group();
 
-        // Init timer for creating balloon
-        this.timer = this.time.addEvent({
+        // Init generateBalloon for creating balloon
+        this.generateBalloon = this.time.addEvent({
             delay: delay,
             callback: this.createBallon,
             callbackScope: this,
             loop: true,
             paused: false,
+        });
+
+        // Instantiate chrono
+        this.timer = this.time.addEvent({
+            delay: delay,
+            callback: this.secondCounter,
+            callbackScope: this,
+            loop: true,
         });
 
         // Instantiate score and display
@@ -76,20 +85,36 @@ export default class MainScene extends Phaser.Scene {
         });
 
         // Instantiate speed and display
-        this.speedText = this.add.text(150, 25, 'Speed: 0', {
+        this.speed = 5;
+        this.speedText = this.add.text(150, 25, 'Speed: ' + this.speed, {
             fontSize: '20px',
             fill: '#000',
         });
 
         // Instantiate size and display
-        this.sizeText = this.add.text(275, 25, 'Size: 0', {
+        this.ballonSize = 2;
+        this.sizeText = this.add.text(275, 25, 'Size: ' + this.ballonSize, {
             fontSize: '20px',
             fill: '#000',
         });
 
         // Instantiate color and display
         this.color = 1;
-        this.colorText = this.add.text(400, 25, 'Color:', {
+        this.colorText = this.add.text(400, 25, 'Color:' + this.color, {
+            fontSize: '20px',
+            fill: '#000',
+        });
+
+        // Instantiate life and display
+        this.life = 2;
+        this.lifeText = this.add.text(525, 25, 'Life: ' + this.life, {
+            fontSize: '20px',
+            fill: '#000',
+        });
+
+        // Instantiate chrono and display
+        this.chrono = 0;
+        this.chronoText = this.add.text(650, 25, 'Life: ' + this.chrono, {
             fontSize: '20px',
             fill: '#000',
         });
@@ -200,11 +225,20 @@ export default class MainScene extends Phaser.Scene {
      *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
      */
     update() {
+        this.chronoText.setText('Chrono :' + this.chrono);
+
         balloons.getChildren().forEach(function(balloon) {
             if (balloon.body.y < 0) {
                 // Destroy balloons of range
                 balloon.destroy();
             }
         }, this);
+    }
+
+    /**
+     * Chrono manager
+     */
+    secondCounter() {
+        this.chrono++;
     }
 }
