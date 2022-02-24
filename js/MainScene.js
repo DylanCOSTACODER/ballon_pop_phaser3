@@ -137,13 +137,16 @@ export default class MainScene extends Phaser.Scene {
     createBallon() {
         // Instantiate variables
         let colorBalloon;
-
+        let gameMode;
         // Manage mode difference for instance balloon
         if (this.choice == 'balloons') {
-            colorBalloon = this.color;
+            gameMode = 1;
         } else {
-            colorBalloon = Phaser.Math.Between(0, 8);
+            gameMode = 2;
         }
+
+        // Generate color target or random based on game mode
+        colorBalloon = gameMode == 1 ? this.color : Phaser.Math.Between(0, 8);
 
         // Set a random gravity X
         var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -gravity : -gravity / 10);
@@ -168,7 +171,15 @@ export default class MainScene extends Phaser.Scene {
             'pointerdown',
             function() {
                 balloon.destroy();
-                this.score++;
+                if (gameMode == 1) {
+                    this.score++;
+                } else {
+                    if (this.color == colorBalloon) {
+                        this.score++;
+                    } else {
+                        this.life--;
+                    }
+                }
                 this.scoreText.setText('Score: ' + this.score);
             },
             this
@@ -225,7 +236,9 @@ export default class MainScene extends Phaser.Scene {
      *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
      */
     update() {
+        // Set Text to display change
         this.chronoText.setText('Chrono :' + this.chrono);
+        this.lifeText.setText('Life :' + this.life);
 
         balloons.getChildren().forEach(function(balloon) {
             if (balloon.body.y < 0) {
