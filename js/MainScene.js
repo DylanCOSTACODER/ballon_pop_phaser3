@@ -35,10 +35,12 @@ export default class MainScene extends Phaser.Scene {
         // Pasing your last scene choice into this.choice for the actual scene
         this.choice = data.choice;
     }
+
     /**
      *   Load the game assets.
      */
     preload() {
+        // Load balloon spritesheet
         this.load.spritesheet('balloons', 'assets/ballon-sprite.png', {
             frameWidth: 521,
             frameHeight: 521,
@@ -65,6 +67,32 @@ export default class MainScene extends Phaser.Scene {
             loop: true,
             paused: false,
         });
+
+        // Instantiate score and display
+        this.score = 0;
+        this.scoreText = this.add.text(25, 25, 'Score: 0', {
+            fontSize: '20px',
+            fill: '#000',
+        });
+
+        // Instantiate speed and display
+        this.speedText = this.add.text(150, 25, 'Speed: 0', {
+            fontSize: '20px',
+            fill: '#000',
+        });
+
+        // Instantiate size and display
+        this.sizeText = this.add.text(275, 25, 'Size: 0', {
+            fontSize: '20px',
+            fill: '#000',
+        });
+
+        // Instantiate color and display
+        this.colorText = this.add.text(400, 25, 'Color: 0', {
+            fontSize: '20px',
+            fill: '#000',
+        });
+
         //Init general timer for end of scene
         if (generalTime) {
             this.generalTimer = this.time.addEvent({
@@ -102,9 +130,10 @@ export default class MainScene extends Phaser.Scene {
         // Interaction click in balloon
         balloon.once(
             'pointerdown',
-            function () {
+            function() {
                 balloon.destroy();
-                score++;
+                this.score++;
+                this.scoreText.setText('Score: ' + this.score);
             },
             this
         );
@@ -149,6 +178,9 @@ export default class MainScene extends Phaser.Scene {
         // );
     }
 
+    /**
+     * Go back to startScene
+     */
     goToStartScene() {
         this.scene.start('StartScene');
     }
@@ -157,7 +189,7 @@ export default class MainScene extends Phaser.Scene {
      *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
      */
     update() {
-        balloons.getChildren().forEach(function (balloon) {
+        balloons.getChildren().forEach(function(balloon) {
             if (balloon.body.y < 0) {
                 // Destroy balloons of range
                 balloon.destroy();
