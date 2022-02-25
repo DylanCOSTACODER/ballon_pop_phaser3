@@ -233,6 +233,13 @@ export default class MainScene extends Phaser.Scene {
     }
 
     /**
+     * Go back to endScene
+     */
+    goToEndScene() {
+        this.scene.start('EndScene');
+    }
+
+    /**
      *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
      */
     update() {
@@ -246,6 +253,9 @@ export default class MainScene extends Phaser.Scene {
                 balloon.destroy();
             }
         }, this);
+
+        // Check if game over
+        this.gameOver();
     }
 
     /**
@@ -253,5 +263,15 @@ export default class MainScene extends Phaser.Scene {
      */
     secondCounter() {
         this.chrono++;
+    }
+
+    /**
+     * Manage game over context
+     */
+    gameOver() {
+        //Context life equal to zero
+        if (this.life <= 0 && this.choice == 'colors') {
+            this.goToEndScene();
+        }
     }
 }
