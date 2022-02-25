@@ -4,15 +4,15 @@ let balloons;
  * Convert rgb string into value number
  */
 const colors = {
-    Verts: { rgb: 'rgb(124,252,0)', value: 0 },
-    Jaunes: { rgb: 'rgb(255,255,0)', value: 1 },
-    Bleus: { rgb: 'rgb(0,0,255)', value: 2 },
-    Oranges: { rgb: 'rgb(255,165,0)', value: 3 },
-    Violets: { rgb: 'rgb(238,130,238)', value: 4 },
-    Marrons: { rgb: 'rgb(126,51,0)', value: 5 },
-    Noirs: { rgb: 'rgb(0,0,0)', value: 6 },
-    Rouges: { rgb: 'rgb(255,0,0)', value: 7 },
-    Lavandes: { rgb: 'rgb(230,230,250)', value: 8 },
+    Verts: { value: 0, rgb: 'rgb(124,252,0)' },
+    Jaunes: { value: 1, rgb: 'rgb(255,255,0)' },
+    Bleus: { value: 2, rgb: 'rgb(0,0,255)' },
+    Oranges: { value: 3, rgb: 'rgb(255,165,0)' },
+    Violets: { value: 4, rgb: 'rgb(238,130,238)' },
+    Marrons: { value: 5, rgb: 'rgb(126,51,0)' },
+    Noirs: { value: 6, rgb: 'rgb(0,0,0)' },
+    Rouges: { value: 7, rgb: 'rgb(255,0,0)' },
+    Lavandes: { value: 8, rgb: 'rgb(230,230,250)' },
 };
 /**
  * Make enum of color in function of rgb
@@ -230,6 +230,13 @@ export default class MainScene extends Phaser.Scene {
     }
 
     /**
+     * Go back to endScene
+     */
+    goToEndScene() {
+        this.scene.start('EndScene');
+    }
+
+    /**
      *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
      */
     update() {
@@ -244,9 +251,8 @@ export default class MainScene extends Phaser.Scene {
             }
         }, this);
 
-        if (this.life == 0) {
-            this.goToStartScene();
-        }
+        // Check if game over
+        this.gameOver();
     }
 
     /**
@@ -254,5 +260,15 @@ export default class MainScene extends Phaser.Scene {
      */
     secondCounter() {
         this.chrono++;
+    }
+
+    /**
+     * Manage game over context
+     */
+    gameOver() {
+        //Context life equal to zero
+        if (this.life <= 0 && this.choice == 'colors') {
+            this.goToEndScene();
+        }
     }
 }
