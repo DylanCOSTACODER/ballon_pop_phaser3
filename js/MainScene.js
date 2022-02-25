@@ -1,27 +1,18 @@
 let balloons;
-let delay = 1000;
-let generalTime = 100000;
-let score;
-let color;
-let chrono;
-let speed = 5;
-let ballonSize = 2;
-let gravity = -speed * 10;
-let life;
 
 /**
  * Convert rgb string into value number
  */
 const colors = {
-    'rgb(124,252,0)': { value: 0, name: 'Verts' },
-    'rgb(255,255,0)': { value: 1, name: 'Jaunes' },
-    'rgb(0,0,255)': { value: 2, name: 'Bleus' },
-    'rgb(255,165,0)': { value: 3, name: 'Oranges' },
-    'rgb(238,130,238)': { value: 4, name: 'Violets' },
-    'rgb(126,51,0)': { value: 5, name: 'Marrons' },
-    'rgb(0,0,0)': { value: 6, name: 'Noirs' },
-    'rgb(255,0,0)': { value: 7, name: 'Rouges' },
-    'rgb(230,230,250)': { value: 8, name: 'Lavandes' },
+    Verts: { rgb: 'rgb(124,252,0)', value: 0 },
+    Jaunes: { rgb: 'rgb(255,255,0)', value: 1 },
+    Bleus: { rgb: 'rgb(0,0,255)', value: 2 },
+    Oranges: { rgb: 'rgb(255,165,0)', value: 3 },
+    Violets: { rgb: 'rgb(238,130,238)', value: 4 },
+    Marrons: { rgb: 'rgb(126,51,0)', value: 5 },
+    Noirs: { rgb: 'rgb(0,0,0)', value: 6 },
+    Rouges: { rgb: 'rgb(255,0,0)', value: 7 },
+    Lavandes: { rgb: 'rgb(230,230,250)', value: 8 },
 };
 /**
  * Make enum of color in function of rgb
@@ -52,17 +43,28 @@ export default class MainScene extends Phaser.Scene {
      *   Create the game objects (images, groups, sprites and animations).
      */
     create() {
+        // Delays for creating balloons speed
+        this.delay = 1000;
+        // Init maximum time
+        this.generalTime = 100000;
         // Init is horizontal boolean
         this.isHorizontal = this.game.config.width > this.game.config.height;
+        // Instantiate size and display
+        this.ballonSize = 1;
+        this.sizeText = this.add.text(275, 25, 'Size: ' + this.ballonSize, {
+            fontSize: '20px',
+            fill: '#000',
+        });
+
         // Init scale balloon width this will give a responsive ballon size
-        this.scaleBalloon = this.isHorizontal ?
-            this.game.config.width * 0.0001 * ballonSize :
-            this.game.config.width * 0.001 * ballonSize;
+        this.scaleBalloon = this.isHorizontal
+            ? this.game.config.width * 0.0002 * this.ballonSize
+            : this.game.config.width * 0.001 * this.ballonSize;
         balloons = this.physics.add.group();
 
         // Init generateBalloon for creating balloon
         this.generateBalloon = this.time.addEvent({
-            delay: delay,
+            delay: this.delay,
             callback: this.createBallon,
             callbackScope: this,
             loop: true,
@@ -71,7 +73,7 @@ export default class MainScene extends Phaser.Scene {
 
         // Instantiate chrono
         this.timer = this.time.addEvent({
-            delay: delay,
+            delay: this.delay,
             callback: this.secondCounter,
             callbackScope: this,
             loop: true,
@@ -91,15 +93,10 @@ export default class MainScene extends Phaser.Scene {
             fill: '#000',
         });
 
-        // Instantiate size and display
-        this.ballonSize = 2;
-        this.sizeText = this.add.text(275, 25, 'Size: ' + this.ballonSize, {
-            fontSize: '20px',
-            fill: '#000',
-        });
+        this.gravity = -this.speed * 10;
 
         // Instantiate color and display
-        this.color = 1;
+        this.color = colors['Verts'].value;
         this.colorText = this.add.text(400, 25, 'Color:' + this.color, {
             fontSize: '20px',
             fill: '#000',
@@ -120,9 +117,9 @@ export default class MainScene extends Phaser.Scene {
         });
 
         //Init general timer for end of scene
-        if (generalTime) {
+        if (this.generalTime) {
             this.generalTimer = this.time.addEvent({
-                delay: generalTime,
+                delay: this.generalTime,
                 callback: this.goToStartScene,
                 callbackScope: this,
                 loop: false,
@@ -149,7 +146,7 @@ export default class MainScene extends Phaser.Scene {
         colorBalloon = gameMode == 1 ? this.color : Phaser.Math.Between(0, 8);
 
         // Set a random gravity X
-        var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -gravity : -gravity / 10);
+        var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -this.gravity : -this.gravity / 10);
         var balloon = balloons.create(
             Phaser.Math.Between(0 + 100, this.game.config.width - 100),
             this.game.config.height + 100,
@@ -163,13 +160,13 @@ export default class MainScene extends Phaser.Scene {
         balloon.setInteractive();
 
         // Set gravity to balloon instance
-        balloon.setGravityY(gravity);
+        balloon.setGravityY(this.gravity);
         balloon.setGravityX(balloon.body.x > this.game.config.width / 2 ? -xGravity : xGravity);
 
         // Interaction click in balloon
         balloon.once(
             'pointerdown',
-            function() {
+            function () {
                 balloon.destroy();
                 if (gameMode == 1) {
                     this.score++;
@@ -240,12 +237,16 @@ export default class MainScene extends Phaser.Scene {
         this.chronoText.setText('Chrono :' + this.chrono);
         this.lifeText.setText('Life :' + this.life);
 
-        balloons.getChildren().forEach(function(balloon) {
+        balloons.getChildren().forEach(function (balloon) {
             if (balloon.body.y < 0) {
                 // Destroy balloons of range
                 balloon.destroy();
             }
         }, this);
+
+        if (this.life == 0) {
+            this.goToStartScene();
+        }
     }
 
     /**
