@@ -13,15 +13,15 @@ let life;
  * Convert rgb string into value number
  */
 const colors = {
-    'rgb(124,252,0)': { value: 0, name: 'Verts' },
-    'rgb(255,255,0)': { value: 1, name: 'Jaunes' },
-    'rgb(0,0,255)': { value: 2, name: 'Bleus' },
-    'rgb(255,165,0)': { value: 3, name: 'Oranges' },
-    'rgb(238,130,238)': { value: 4, name: 'Violets' },
-    'rgb(126,51,0)': { value: 5, name: 'Marrons' },
-    'rgb(0,0,0)': { value: 6, name: 'Noirs' },
-    'rgb(255,0,0)': { value: 7, name: 'Rouges' },
-    'rgb(230,230,250)': { value: 8, name: 'Lavandes' },
+    Verts: { value: 0, rgb: 'rgb(124,252,0)' },
+    Jaunes: { value: 1, rgb: 'rgb(255,255,0)' },
+    Bleus: { value: 2, rgb: 'rgb(0,0,255)' },
+    Oranges: { value: 3, rgb: 'rgb(255,165,0)' },
+    Violets: { value: 4, rgb: 'rgb(238,130,238)' },
+    Marrons: { value: 5, rgb: 'rgb(126,51,0)' },
+    Noirs: { value: 6, rgb: 'rgb(0,0,0)' },
+    Rouges: { value: 7, rgb: 'rgb(255,0,0)' },
+    Lavandes: { value: 8, rgb: 'rgb(230,230,250)' },
 };
 /**
  * Make enum of color in function of rgb
