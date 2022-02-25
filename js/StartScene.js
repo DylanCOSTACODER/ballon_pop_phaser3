@@ -7,6 +7,13 @@ export default class StartScene extends Phaser.Scene {
      * Create the game objects (images, groups, sprites and animations).
      */
     create() {
+        // Init text title menu
+        //@TODO 120 with text width
+        this.titleMenu = this.add.text(this.game.config.width / 2 - 135, 100, 'Balloon Pop', {
+            fontSize: '40px',
+            fill: '#000',
+        });
+
         // Init ballon chase button
         let ballonChaseButton = this.add.text(100, 100, 'Chasse aux ballons');
         ballonChaseButton.setPadding(10);
@@ -21,7 +28,7 @@ export default class StartScene extends Phaser.Scene {
         colorChaseButton.setStyle({ backgroundColor: '#e55c90', fontSize: 32 });
         colorChaseButton.setInteractive();
         colorChaseButton.x = this.game.config.width / 2 - colorChaseButton.width / 2;
-        colorChaseButton.y = (this.game.config.height * 3) / 4 - colorChaseButton.height / 2;
+        colorChaseButton.y = (this.game.config.height * 1.4) / 4 - colorChaseButton.height / 2;
 
         // Manage mode choice
         ballonChaseButton.on('pointerdown', () => {
