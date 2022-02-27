@@ -19,12 +19,20 @@ export default class MainScene extends Phaser.Scene {
             frameWidth: 521,
             frameHeight: 521,
         });
+
+        // Load sound
+        this.load.audio('clickBalloon', ['./sounds/clickBalloon.wav']);
+        this.load.audio('endGame', ['./sounds/endGame.wav']);
     }
 
     /**
      *   Create the game objects (images, groups, sprites and animations).
      */
     create() {
+        // Sound manager
+        this.clickBalloonSound = this.sound.add('clickBalloon');
+        this.endGameSound = this.sound.add('endGame');
+
         // get Params
         this.getParams(true);
         // Delays for creating balloons speed
@@ -68,9 +76,9 @@ export default class MainScene extends Phaser.Scene {
      */
     createBallon() {
         this.getParams(false);
-        this.scaleBalloon = this.isHorizontal
-            ? this.game.scale.gameSize.width * 0.0002 * this.ballonSize
-            : this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
+        this.scaleBalloon = this.isHorizontal ?
+            this.game.scale.gameSize.width * 0.0002 * this.ballonSize :
+            this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
         // Instantiate variables
         let colorBalloon;
         let gameMode;
@@ -105,8 +113,9 @@ export default class MainScene extends Phaser.Scene {
         // Interaction click in balloon
         balloon.once(
             'pointerdown',
-            function () {
+            function() {
                 balloon.destroy();
+                this.clickBalloonSound.play();
                 if (gameMode == 1) {
                     this.score++;
                 } else {
@@ -145,13 +154,13 @@ export default class MainScene extends Phaser.Scene {
         this.getParams(true);
         // this.life = document.getElementById('chanceRange').value;
         this.ballonSize = document.getElementById('sizeRange').value;
-        this.scaleBalloon = this.isHorizontal
-            ? this.game.scale.gameSize.width * 0.0002 * this.ballonSize
-            : this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
+        this.scaleBalloon = this.isHorizontal ?
+            this.game.scale.gameSize.width * 0.0002 * this.ballonSize :
+            this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
 
         // Update actual balloons
         if (balloons) {
-            balloons.getChildren().forEach(function (balloon) {
+            balloons.getChildren().forEach(function(balloon) {
                 if (balloon) {
                     balloon.body.gravity.y = this.gravity;
                     balloon.setScale(this.scaleBalloon);
@@ -207,8 +216,8 @@ export default class MainScene extends Phaser.Scene {
             (this.maxScore <= this.score && this.maxScore != 0) ||
             (this.chrono >= this.maximumTime && this.maximumTime != 0)
         ) {
-            console.log(this.chrono, this.maximumTime);
             this.goToEndScene();
+            this.endGameSound.play();
         }
     }
 }
