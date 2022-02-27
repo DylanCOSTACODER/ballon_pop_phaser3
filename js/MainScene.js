@@ -21,6 +21,7 @@ export default class MainScene extends Phaser.Scene {
         // Load sound
         this.load.audio('clickBalloon', ['./sounds/clickBalloon.wav']);
         this.load.audio('endGame', ['./sounds/endGame.wav']);
+        this.load.audio('error', ['./sounds/error.wav']);
     }
 
     /**
@@ -41,6 +42,7 @@ export default class MainScene extends Phaser.Scene {
 
         // Sound manager
         this.clickBalloonSound = this.sound.add('clickBalloon');
+        this.errorSound = this.sound.add('error');
         this.endGameSound = this.sound.add('endGame');
 
         // get Params
@@ -137,14 +139,17 @@ export default class MainScene extends Phaser.Scene {
             'pointerdown',
             function () {
                 balloon.destroy();
-                this.clickBalloonSound.play();
+
                 if (gameMode == 1) {
                     this.score++;
+                    this.clickBalloonSound.play();
                 } else {
                     if (this.color == colorBalloon) {
                         this.score++;
+                        this.clickBalloonSound.play();
                     } else {
                         this.lifesLosts++;
+                        this.errorSound.play();
                     }
                 }
                 document.getElementById('scoreDisplay').style.width = (this.score / this.maxScore) * 100 + '%';
@@ -189,7 +194,7 @@ export default class MainScene extends Phaser.Scene {
                 if (balloon.body.y < -this.game.scale.gameSize.height * 0.1) {
                     if (balloon.frame.name == this.color && this.choice == 'colors') {
                         this.lifesLosts++;
-                        console.log(this.lifesLosts);
+                        this.errorSound.play();
                     }
                     // Destroy balloons of range
                     balloon.destroy();

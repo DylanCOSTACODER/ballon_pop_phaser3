@@ -20,10 +20,6 @@ canvas {
     display: inline-block;
 }
 
-#colorDisplay {
-    background-color: #c0c0c0;
-}
-
 .green {
     background-color: rgb(124, 252, 0);
 }
