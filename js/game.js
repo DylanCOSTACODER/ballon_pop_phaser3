@@ -7,7 +7,7 @@ import StartScene from './StartScene.js';
  */
 const configurations = {
     type: Phaser.AUTO,
-    backgroundColor: '#C0C0C0',
+    backgroundColor: '#F6F6F6',
     parent: 'balloonPop',
     scale: {
         mode: Phaser.Scale.FIT,
@@ -34,11 +34,11 @@ const configurations = {
 let game = new Phaser.Game(configurations);
 
 var myOffcanvas = document.getElementById('offcanvasExample');
-myOffcanvas.addEventListener('hidden.bs.offcanvas', function () {
+myOffcanvas.addEventListener('hidden.bs.offcanvas', function() {
     game.scene.keys.MainScene.scene.resume();
 });
 
-myOffcanvas.addEventListener('show.bs.offcanvas', function () {
+myOffcanvas.addEventListener('show.bs.offcanvas', function() {
     game.scene.keys.MainScene.scene.pause();
 });
 
