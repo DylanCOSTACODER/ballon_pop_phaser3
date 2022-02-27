@@ -1,31 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <link href="./css/styles.css" rel="stylesheet"></link>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Ballon Pop</title>
-        <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
-    </head>
-    <body>
-        <div id="Ballon Pop"></div>
-        <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-            Paramètres
-        </a>
-          
-          <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasExampleLabel">Paramètres</h5>
-              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+
+<head>
+    <link href="./css/styles.css" rel="stylesheet">
+    </link>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ballon Pop</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+</head>
+
+<body>
+    <div class="row">
+        <div class="row col d-flex justify-content-around">
+            <div class="col">
+                <div class="row">
+                    <p class="col pt-1">Chrono</p>
+                    <div class="col-8 p-2">
+                        <div class="progress  border border-primary mt-auto">
+                            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="10"
+                                aria-valuemin="0" aria-valuemax="100" id="chronoDisplay"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="offcanvas-body">
-                <label for="customRange1" class="form-label">Taille</label>
-                <input type="range" class="form-range" min="0.5" step="0.1" max="1.5" id="sizeRange1">
+            <div class="col">
+                <div class="row">
+                    <p class="col pt-1">Score</p>
+                    <div class="col-8 p-2">
+                        <div class="progress  border border-primary mt-auto">
+                            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="10"
+                                aria-valuemin="0" aria-valuemax="100" id="scoreDisplay"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        <script type="module" src="./js/game.js"></script>
-    </body>
+            <div class="col pt-1">
+                <p>Chance : <span id="chanceDisplay"></span></p>
+            </div>
+            <div class="col pt-1  d-none d-xl-block">
+                <p>Vitesse : <span id="speedDisplay"></span></p>
+            </div>
+            <div class="col pt-1 d-none d-xl-block">
+                <p>Taille : <span id="sizeDisplay"></span></p>
+            </div>
+            <div class="col pt-1 d-none d-md-block">
+                <p>Couleur : <span id="colorDisplay"></span></p>
+            </div>
+        </div>
+        <div class="col-1 pt-1">
+            <a class="btn btn-primary float-end" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                aria-controls="offcanvasExample">
+                Paramètres
+            </a>
+        </div>
+
+    </div>
+    <!-- Launch params -->
+
+
+    <!-- Param bar -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Paramètres</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="row">
+                <label class="form-label col">Taille</label>
+                <span class="col text-right" id="sizeValue"></span>
+            </div>
+            <input type="range" class="form-range" min="0.3" step="0.1" max="2" id="sizeRange">
+        </div>
+        <div class="offcanvas-body">
+            <div class="row">
+                <label class="form-label col">Vitesse</label>
+                <span class="col text-right" id="speedValue"></span>
+            </div>
+            <input type="range" class="form-range" min="1" step="1" max="20" id="speedRange">
+        </div>
+        <div class="offcanvas-body">
+            <div class="row">
+                <label class="form-label col">Chances</label>
+                <span class="col text-right" id="chanceValue"></span>
+            </div>
+            <input type="range" class="form-range" min="1" step="1" max="10" id="chanceRange">
+        </div>
+        <div class="offcanvas-body">
+            <div class="row">
+                <label class="form-label col">Couleur</label>
+                <span class="col text-right" id="colorValue"></span>
+            </div>
+            <span id="colorRange" style="display: none;"></span>
+            <div class="row">
+                <div class="col"><button class="button-circle green"
+                        onclick="setColorValue('Verts', 0, 'rgb(124,252,0)')"></button></div>
+                <div class="col"><button class="button-circle yellow"
+                        onclick="setColorValue('Jaunes', 1, 'rgb(255,255,0)')"></button>
+                </div>
+                <div class="col"><button class="button-circle blue"
+                        onclick="setColorValue('Bleus', 2,'rgb(0,0,255)' )"></button></div>
+                <div class="col"><button class="button-circle orange"
+                        onclick="setColorValue('Oranges', 3, 'rgb(255,165,0)')"></button>
+                </div>
+                <div class="col"><button class="button-circle purple"
+                        onclick="setColorValue('Violets', 4,'rgb(238,130,238)' )"></button>
+                </div>
+                <div class="col"><button class="button-circle brown"
+                        onclick="setColorValue('Marrons', 5,'rgb(126,51,0)')"></button>
+                </div>
+                <div class="col"><button class="button-circle black"
+                        onclick="setColorValue('Noirs', 6,'rgb(0,0,0)')"></button></div>
+                <div class="col"><button class="button-circle red"
+                        onclick="setColorValue('Rouges', 7,'rgb(255,0,0)')"></button></div>
+                <div class="col"><button class="button-circle lavanda"
+                        onclick="setColorValue('Lavandes', 8,'rgb(230,230,250)')"></button>
+                </div>
+            </div>
+        </div>
+        <div class="offcanvas-body">
+            <div class="row">
+                <label class="form-label col">Temps maximum</label>
+                <span class="col text-right" id="timeValue"></span>
+            </div>
+            <input type="range" class="form-range" min="0" step="10" max="360" id="timeRange">
+        </div>
+        <div class="offcanvas-body">
+            <div class="row">
+                <label class="form-label col">Objectif</label>
+                <span class="col text-right" id="scoreValue"></span>
+            </div>
+            <input type="range" class="form-range" min="0" step="1" max="50" id="scoreRange">
+        </div>
+    </div>
+    <!-- Game container -->
+    <div id="balloonPop" class="w-100 h-100"></div>
+
+    <script type="module" src="./js/game.js"></script>
+    <script type="" src="./js/function.js"></script>
+    <script type="module" src="./js/module.js"></script>
+</body>
+
+
 </html>

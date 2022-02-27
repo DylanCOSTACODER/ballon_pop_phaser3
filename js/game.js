@@ -7,11 +7,12 @@ import StartScene from './StartScene.js';
  */
 const configurations = {
     type: Phaser.AUTO,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#C0C0C0',
+    parent: 'balloonPop',
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        parent: 'fruitChase',
+        parent: 'balloonPop',
         width: window.innerWidth,
         height: window.innerHeight,
     },
@@ -30,4 +31,17 @@ const configurations = {
  * @name game
  * @type {object}
  */
-new Phaser.Game(configurations);
+let game = new Phaser.Game(configurations);
+
+var myOffcanvas = document.getElementById('offcanvasExample');
+myOffcanvas.addEventListener('hidden.bs.offcanvas', function () {
+    game.scene.keys.MainScene.scene.resume();
+});
+
+myOffcanvas.addEventListener('show.bs.offcanvas', function () {
+    game.scene.keys.MainScene.scene.pause();
+});
+
+export function convertMinutesSeconds(s) {
+    return (s - (s %= 60)) / 60 + (9 < s ? 'm' : 'm0') + s;
+}

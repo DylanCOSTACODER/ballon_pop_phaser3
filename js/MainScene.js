@@ -1,26 +1,8 @@
 let balloons;
 
-/**
- * Convert rgb string into value number
- */
-const colors = {
-    Verts: { value: 0, rgb: 'rgb(124,252,0)' },
-    Jaunes: { value: 1, rgb: 'rgb(255,255,0)' },
-    Bleus: { value: 2, rgb: 'rgb(0,0,255)' },
-    Oranges: { value: 3, rgb: 'rgb(255,165,0)' },
-    Violets: { value: 4, rgb: 'rgb(238,130,238)' },
-    Marrons: { value: 5, rgb: 'rgb(126,51,0)' },
-    Noirs: { value: 6, rgb: 'rgb(0,0,0)' },
-    Rouges: { value: 7, rgb: 'rgb(255,0,0)' },
-    Lavandes: { value: 8, rgb: 'rgb(230,230,250)' },
-};
-/**
- * Make enum of color in function of rgb
- */
-
 export default class MainScene extends Phaser.Scene {
     constructor() {
-        super('MainScene');
+        super({ key: 'MainScene' });
     }
 
     init(data) {
@@ -43,23 +25,15 @@ export default class MainScene extends Phaser.Scene {
      *   Create the game objects (images, groups, sprites and animations).
      */
     create() {
+        // get Params
+        this.getParams(true);
         // Delays for creating balloons speed
         this.delay = 1000;
-        // Init maximum time
-        this.generalTime = 100000;
+        // Reset play values
+        this.resetValues();
         // Init is horizontal boolean
-        this.isHorizontal = this.game.config.width > this.game.config.height;
-        // Instantiate size and display
-        this.ballonSize = 1;
-        this.sizeText = this.add.text(275, 25, 'Size: ' + this.ballonSize, {
-            fontSize: '20px',
-            fill: '#000',
-        });
-
+        this.isHorizontal = this.game.scale.gameSize.width > this.game.scale.gameSize.height;
         // Init scale balloon width this will give a responsive ballon size
-        this.scaleBalloon = this.isHorizontal
-            ? this.game.config.width * 0.0002 * this.ballonSize
-            : this.game.config.width * 0.001 * this.ballonSize;
         balloons = this.physics.add.group();
 
         // Init generateBalloon for creating balloon
@@ -78,60 +52,25 @@ export default class MainScene extends Phaser.Scene {
             callbackScope: this,
             loop: true,
         });
+    }
 
+    resetValues() {
+        // Life losts
+        this.lifesLosts = 0;
         // Instantiate score and display
         this.score = 0;
-        this.scoreText = this.add.text(25, 25, 'Score: 0', {
-            fontSize: '20px',
-            fill: '#000',
-        });
-
-        // Instantiate speed and display
-        this.speed = 5;
-        this.speedText = this.add.text(150, 25, 'Speed: ' + this.speed, {
-            fontSize: '20px',
-            fill: '#000',
-        });
-
-        this.gravity = -this.speed * 10;
-
-        // Instantiate color and display
-        this.color = colors['Verts'].value;
-        this.colorText = this.add.text(400, 25, 'Color:' + this.color, {
-            fontSize: '20px',
-            fill: '#000',
-        });
-
-        // Instantiate life and display
-        this.life = 2;
-        this.lifeText = this.add.text(525, 25, 'Life: ' + this.life, {
-            fontSize: '20px',
-            fill: '#000',
-        });
-
         // Instantiate chrono and display
         this.chrono = 0;
-        this.chronoText = this.add.text(650, 25, 'Life: ' + this.chrono, {
-            fontSize: '20px',
-            fill: '#000',
-        });
-
-        //Init general timer for end of scene
-        if (this.generalTime) {
-            this.generalTimer = this.time.addEvent({
-                delay: this.generalTime,
-                callback: this.goToStartScene,
-                callbackScope: this,
-                loop: false,
-                paused: false,
-            });
-        }
     }
 
     /**
      * Here go the code to create a balloon
      */
     createBallon() {
+        this.getParams(false);
+        this.scaleBalloon = this.isHorizontal
+            ? this.game.scale.gameSize.width * 0.0002 * this.ballonSize
+            : this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
         // Instantiate variables
         let colorBalloon;
         let gameMode;
@@ -146,10 +85,10 @@ export default class MainScene extends Phaser.Scene {
         colorBalloon = gameMode == 1 ? this.color : Phaser.Math.Between(0, 8);
 
         // Set a random gravity X
-        var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -this.gravity : -this.gravity / 10);
+        var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -this.gravity / 5 : -this.gravity / 10);
         var balloon = balloons.create(
-            Phaser.Math.Between(0 + 100, this.game.config.width - 100),
-            this.game.config.height + 100,
+            Phaser.Math.Between(0 + 100, this.game.scale.gameSize.width - 100),
+            this.game.scale.gameSize.height + 100,
             'balloons',
             colorBalloon
         );
@@ -161,7 +100,7 @@ export default class MainScene extends Phaser.Scene {
 
         // Set gravity to balloon instance
         balloon.setGravityY(this.gravity);
-        balloon.setGravityX(balloon.body.x > this.game.config.width / 2 ? -xGravity : xGravity);
+        balloon.setGravityX(balloon.body.x > this.game.scale.gameSize.width / 2 ? -xGravity : xGravity);
 
         // Interaction click in balloon
         balloon.once(
@@ -174,52 +113,14 @@ export default class MainScene extends Phaser.Scene {
                     if (this.color == colorBalloon) {
                         this.score++;
                     } else {
-                        this.life--;
+                        this.lifesLosts++;
                     }
                 }
-                this.scoreText.setText('Score: ' + this.score);
+                document.getElementById('scoreDisplay').style.width = (this.score / this.maxScore) * 100 + '%';
+                document.getElementById('chanceDisplay').innerHTML = this.life - this.lifesLosts;
             },
             this
         );
-
-        // Create balloon geometry
-        // var balloon = new Phaser.Geom.Circle(
-        //     Phaser.Math.Between(0 + 100, this.game.config.width - 100),
-        //     this.game.config.height + 100,
-        //     10
-        // );
-        // this.add.circle(200, 200, 80, 0x6666ff);
-        // graphics.fillCircleShape(balloon);
-
-        // var graphics = this.add.graphics({ fillStyle: { color: 0xff0000 } });
-        // var test = new Phaser.Geom.Circle(50, 50, 50);
-        // graphics.fillCircleShape(balloon);
-
-        // Instantiate balloon with equation of movement
-        // var balloon = balloons.create(, this.game.config.width - 100),
-        //       this.game.config.height + 100,
-        //     ' 'balloo's',
-        //       0
-        //   );
-        //
-        // Initialize instance balloon
-        // Initialize instance balloon
-        // var balloon = this.add.circle(200, 200, 80, 0x6666ff);
-        // balloon.allowgravity = true;
-        // balloon.setInteractive();
-
-        // balloon.setGravityY(gravity);
-        // balloon.setGravityX(balloon.body.x > this.game.config.width / 2 ? -xGravity : xGravity);
-
-        // // Interaction click in balloon
-        // balloon.once(
-        //     'pointerdown',
-        //     function () {
-        //         balloon.destroy();
-        //         score++;
-        //     },
-        //     this
-        // );
     }
 
     /**
@@ -233,26 +134,59 @@ export default class MainScene extends Phaser.Scene {
      * Go back to endScene
      */
     goToEndScene() {
-        this.scene.start('EndScene');
+        this.scene.start('EndScene', { score: this.score, time: this.chrono });
     }
 
     /**
      *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
      */
     update() {
-        // Set Text to display change
-        this.chronoText.setText('Chrono :' + this.chrono);
-        this.lifeText.setText('Life :' + this.life);
+        // Update params
+        this.getParams(true);
+        // this.life = document.getElementById('chanceRange').value;
+        this.ballonSize = document.getElementById('sizeRange').value;
+        this.scaleBalloon = this.isHorizontal
+            ? this.game.scale.gameSize.width * 0.0002 * this.ballonSize
+            : this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
 
-        balloons.getChildren().forEach(function (balloon) {
-            if (balloon.body.y < 0) {
-                // Destroy balloons of range
-                balloon.destroy();
-            }
-        }, this);
+        // Update actual balloons
+        if (balloons) {
+            balloons.getChildren().forEach(function (balloon) {
+                if (balloon) {
+                    balloon.body.gravity.y = this.gravity;
+                    balloon.setScale(this.scaleBalloon);
+                    if (this.choice == 'balloons') {
+                        balloon.setFrame(this.color);
+                    }
+                }
+
+                if (balloon.body.y < -this.game.scale.gameSize.height * 0.1) {
+                    if (balloon.frame.name == this.color && this.choice == 'colors') {
+                        this.lifesLosts++;
+                        console.log(this.lifesLosts);
+                    }
+                    // Destroy balloons of range
+                    balloon.destroy();
+                }
+            }, this);
+        }
+
+        document.getElementById('chanceDisplay').innerHTML = this.life - this.lifesLosts;
 
         // Check if game over
         this.gameOver();
+    }
+
+    getParams(all) {
+        this.ballonSize = document.getElementById('sizeRange').value;
+        this.speed = document.getElementById('speedRange').value;
+        this.life = document.getElementById('chanceRange').value;
+        this.color = localStorage.getItem('Color') ? localStorage.getItem('Color') : 1;
+        this.gravity = -this.speed * 10;
+        if (all) {
+            this.maximumTime = parseInt(document.getElementById('timeRange').value);
+            this.maxScore = document.getElementById('scoreRange').value;
+        }
     }
 
     /**
@@ -260,6 +194,7 @@ export default class MainScene extends Phaser.Scene {
      */
     secondCounter() {
         this.chrono++;
+        document.getElementById('chronoDisplay').style.width = (this.chrono / this.maximumTime) * 100 + '%';
     }
 
     /**
@@ -267,7 +202,12 @@ export default class MainScene extends Phaser.Scene {
      */
     gameOver() {
         //Context life equal to zero
-        if (this.life <= 0 && this.choice == 'colors') {
+        if (
+            (this.life - this.lifesLosts <= 0 && this.choice == 'colors') ||
+            (this.maxScore <= this.score && this.maxScore != 0) ||
+            (this.chrono >= this.maximumTime && this.maximumTime != 0)
+        ) {
+            console.log(this.chrono, this.maximumTime);
             this.goToEndScene();
         }
     }
