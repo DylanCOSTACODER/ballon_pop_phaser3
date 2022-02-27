@@ -1,5 +1,3 @@
-let balloons;
-
 export default class MainScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MainScene' });
@@ -15,7 +13,7 @@ export default class MainScene extends Phaser.Scene {
      */
     preload() {
         // Load balloon spritesheet
-        this.load.spritesheet('balloons', 'assets/ballon-sprite.png', {
+        this.load.spritesheet('balloons', '/assets/ballon-sprite.png', {
             frameWidth: 521,
             frameHeight: 521,
         });
@@ -29,20 +27,36 @@ export default class MainScene extends Phaser.Scene {
      *   Create the game objects (images, groups, sprites and animations).
      */
     create() {
+        // Init in scene value to true
+        this.inScene = true;
+
+        // Init balloons
+        this.balloons;
+
+        // Setting balloon scale
+        this.ballonSize = document.getElementById('sizeRange').value;
+        this.scaleBalloon = this.isHorizontal
+            ? this.game.scale.gameSize.width * 0.0002 * this.ballonSize
+            : this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
+
         // Sound manager
         this.clickBalloonSound = this.sound.add('clickBalloon');
         this.endGameSound = this.sound.add('endGame');
 
         // get Params
         this.getParams(true);
+
         // Delays for creating balloons speed
         this.delay = 1000;
+
         // Reset play values
         this.resetValues();
+
         // Init is horizontal boolean
         this.isHorizontal = this.game.scale.gameSize.width > this.game.scale.gameSize.height;
+
         // Init scale balloon width this will give a responsive ballon size
-        balloons = this.physics.add.group();
+        this.balloons = this.physics.add.group();
 
         // Init generateBalloon for creating balloon
         this.generateBalloon = this.time.addEvent({
@@ -62,11 +76,14 @@ export default class MainScene extends Phaser.Scene {
         });
     }
 
+    /**Reset players values */
     resetValues() {
         // Life losts
         this.lifesLosts = 0;
+
         // Instantiate score and display
         this.score = 0;
+
         // Instantiate chrono and display
         this.chrono = 0;
     }
@@ -75,13 +92,18 @@ export default class MainScene extends Phaser.Scene {
      * Here go the code to create a balloon
      */
     createBallon() {
+        // Actualize ballons params
         this.getParams(false);
-        this.scaleBalloon = this.isHorizontal ?
-            this.game.scale.gameSize.width * 0.0002 * this.ballonSize :
-            this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
+
+        // Set balloon scale
+        this.scaleBalloon = this.isHorizontal
+            ? this.game.scale.gameSize.width * 0.0002 * this.ballonSize
+            : this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
+
         // Instantiate variables
         let colorBalloon;
         let gameMode;
+
         // Manage mode difference for instance balloon
         if (this.choice == 'balloons') {
             gameMode = 1;
@@ -90,11 +112,11 @@ export default class MainScene extends Phaser.Scene {
         }
 
         // Generate color target or random based on game mode
-        colorBalloon = gameMode == 1 ? this.color : Phaser.Math.Between(0, 8);
+        colorBalloon = gameMode == 1 ? this.color : Phaser.Math.Between(0, 7);
 
         // Set a random gravity X
         var xGravity = Phaser.Math.Between(0, this.isHorizontal ? -this.gravity / 5 : -this.gravity / 10);
-        var balloon = balloons.create(
+        var balloon = this.balloons.create(
             Phaser.Math.Between(0 + 100, this.game.scale.gameSize.width - 100),
             this.game.scale.gameSize.height + 100,
             'balloons',
@@ -113,7 +135,7 @@ export default class MainScene extends Phaser.Scene {
         // Interaction click in balloon
         balloon.once(
             'pointerdown',
-            function() {
+            function () {
                 balloon.destroy();
                 this.clickBalloonSound.play();
                 if (gameMode == 1) {
@@ -152,15 +174,10 @@ export default class MainScene extends Phaser.Scene {
     update() {
         // Update params
         this.getParams(true);
-        // this.life = document.getElementById('chanceRange').value;
-        this.ballonSize = document.getElementById('sizeRange').value;
-        this.scaleBalloon = this.isHorizontal ?
-            this.game.scale.gameSize.width * 0.0002 * this.ballonSize :
-            this.game.scale.gameSize.width * 0.0001 * this.ballonSize;
-
-        // Update actual balloons
-        if (balloons) {
-            balloons.getChildren().forEach(function(balloon) {
+        // This function can also be called if we are not in the scene when need to if we are in the de enter in loop
+        if (this.inScene) {
+            // Update actual this.balloons
+            this.balloons.getChildren().forEach(function (balloon) {
                 if (balloon) {
                     balloon.body.gravity.y = this.gravity;
                     balloon.setScale(this.scaleBalloon);
@@ -179,13 +196,17 @@ export default class MainScene extends Phaser.Scene {
                 }
             }, this);
         }
-
+        // Update chance display div
         document.getElementById('chanceDisplay').innerHTML = this.life - this.lifesLosts;
 
         // Check if game over
         this.gameOver();
     }
 
+    /**
+     * This function update the parameters
+     * @param {boolean} all - True if we get all params false if not
+     */
     getParams(all) {
         this.ballonSize = document.getElementById('sizeRange').value;
         this.speed = document.getElementById('speedRange').value;
@@ -216,8 +237,12 @@ export default class MainScene extends Phaser.Scene {
             (this.maxScore <= this.score && this.maxScore != 0) ||
             (this.chrono >= this.maximumTime && this.maximumTime != 0)
         ) {
+            // Navigate to end scene
             this.goToEndScene();
             this.endGameSound.play();
+            // Reset player values
+            this.resetValues();
+            this.inScene = false;
         }
     }
 }

@@ -4,8 +4,11 @@
 <head>
     <link href="./css/styles.css" rel="stylesheet">
     </link>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,7 +26,8 @@
                     </div>
                     <div class="col-7 p-0">
                         <div class="progress border border-primary mt-auto">
-                            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" id="chronoDisplay"></div>
+                            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="10"
+                                aria-valuemin="0" aria-valuemax="100" id="chronoDisplay"></div>
                         </div>
                     </div>
                 </div>
@@ -35,7 +39,8 @@
                     </div>
                     <div class="col-7 p-0">
                         <div class="progress border border-primary mt-auto">
-                            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" id="scoreDisplay"></div>
+                            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="10"
+                                aria-valuemin="0" aria-valuemax="100" id="scoreDisplay"></div>
                         </div>
                     </div>
                 </div>
@@ -70,11 +75,11 @@
             </div>
         </div>
         <div class="col-1 p-0">
-            <a class="btn btn-primary float-end" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+            <a class="btn btn-primary float-end" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                aria-controls="offcanvasExample">
                 Paramètres
             </a>
         </div>
-
     </div>
     <!-- Launch params -->
 
@@ -113,20 +118,26 @@
             </div>
             <span id="colorRange" style="display: none;"></span>
             <div class="row">
-                <div class="col"><button class="button-circle green" onclick="setColorValue('Verts', 0, 'rgb(124,252,0)')"></button></div>
-                <div class="col"><button class="button-circle yellow" onclick="setColorValue('Jaunes', 1, 'rgb(255,255,0)')"></button>
+                <div class="col"><button class="button-circle green"
+                        onclick="setColorValue('Verts', 0, 'rgb(124,252,0)')"></button></div>
+                <div class="col"><button class="button-circle yellow"
+                        onclick="setColorValue('Jaunes', 1, 'rgb(255,255,0)')"></button>
                 </div>
-                <div class="col"><button class="button-circle blue" onclick="setColorValue('Bleus', 2,'rgb(0,0,255)' )"></button></div>
-                <div class="col"><button class="button-circle orange" onclick="setColorValue('Oranges', 3, 'rgb(255,165,0)')"></button>
+                <div class="col"><button class="button-circle blue"
+                        onclick="setColorValue('Bleus', 2,'rgb(0,0,255)' )"></button></div>
+                <div class="col"><button class="button-circle orange"
+                        onclick="setColorValue('Oranges', 3, 'rgb(255,165,0)')"></button>
                 </div>
-                <div class="col"><button class="button-circle purple" onclick="setColorValue('Violets', 4,'rgb(238,130,238)' )"></button>
+                <div class="col"><button class="button-circle purple"
+                        onclick="setColorValue('Violets', 4,'rgb(238,130,238)' )"></button>
                 </div>
-                <div class="col"><button class="button-circle brown" onclick="setColorValue('Marrons', 5,'rgb(126,51,0)')"></button>
+                <div class="col"><button class="button-circle brown"
+                        onclick="setColorValue('Marrons', 5,'rgb(126,51,0)')"></button>
                 </div>
-                <div class="col"><button class="button-circle black" onclick="setColorValue('Noirs', 6,'rgb(0,0,0)')"></button></div>
-                <div class="col"><button class="button-circle red" onclick="setColorValue('Rouges', 7,'rgb(255,0,0)')"></button></div>
-                <div class="col"><button class="button-circle lavanda" onclick="setColorValue('Lavandes', 8,'rgb(230,230,250)')"></button>
-                </div>
+                <div class="col"><button class="button-circle black"
+                        onclick="setColorValue('Noirs', 6,'rgb(0,0,0)')"></button></div>
+                <div class="col"><button class="button-circle red"
+                        onclick="setColorValue('Rouges', 7,'rgb(255,0,0)')"></button></div>
             </div>
         </div>
         <div class="offcanvas-body">
